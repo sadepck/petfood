@@ -294,22 +294,133 @@ img {
     font-size: 1.2rem;
 }
 
+/* Galería de Mascotas */
+.galeria {
+    background-color: var(--white);
+    padding: 80px 0;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+}
+
+.galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.mascota-card {
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+}
+
+.mascota-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.mascota-imagen {
+    width: 100%;
+    height: 300px;  /* Aumenté la altura para mejor visualización */
+    overflow: hidden;
+    position: relative;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mascota-imagen img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;  /* Cambiado de 'cover' a 'contain' para mostrar la imagen completa */
+    transition: transform 0.5s ease;
+    display: block;
+}
+
+.mascota-card:hover .mascota-imagen img {
+    transform: scale(1.05);
+}
+
+.mascota-info {
+    padding: 20px;
+    text-align: center;
+}
+
+.mascota-info h3 {
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    font-size: 1.4rem;
+}
+
+.mascota-info p {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.mascota-edad {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .galeria-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .mascota-imagen {
+        height: 250px;
+    }
+}
+
+@media (max-width: 992px) {
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .contact-form {
+        padding: 25px;
+    }
+}
+
 /* Contacto Section */
 .contacto {
-    background-color: var(--white);
+    background-color: var(--light-gray);
     padding: 100px 0;
 }
 
 .contact-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1.5fr 1fr;
     gap: 50px;
-    margin-top: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.contact-info h3, .contact-form h3 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
+/* Estilos del formulario */
+.contact-form {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .contact-info p {

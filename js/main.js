@@ -39,70 +39,196 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const contactForm = document.getElementById('contactForm');
 
 if (contactForm) {
+    const formFields = {
+        name: {
+            element: document.getElementById('name'),
+            required: true,
+            minLength: 2,
+            maxLength: 50,
+            pattern: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            errorMessages: {
+                required: 'El nombre es obligatorio',
+                minLength: 'El nombre debe tener al menos 2 caracteres',
+                maxLength: 'El nombre no puede tener más de 50 caracteres',
+                pattern: 'El nombre solo puede contener letras y espacios'
+            }
+        },
+        email: {
+            element: document.getElementById('email'),
+            required: true,
+            pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            errorMessages: {
+                required: 'El correo electrónico es obligatorio',
+                pattern: 'Por favor ingresa un correo electrónico válido'
+            }
+        },
+        phone: {
+            element: document.getElementById('phone'),
+            required: false,
+            pattern: /^[0-9+\-\s()]*$/,
+            errorMessages: {
+                pattern: 'Por favor ingresa un número de teléfono válido'
+            }
+        },
+        subject: {
+            element: document.getElementById('subject'),
+            required: true,
+            errorMessages: {
+                required: 'Por favor selecciona un asunto'
+            }
+        },
+        message: {
+            element: document.getElementById('message'),
+            required: true,
+            minLength: 10,
+            errorMessages: {
+                required: 'El mensaje es obligatorio',
+                minLength: 'El mensaje debe tener al menos 10 caracteres'
+            }
+        }
+    };
+
+    // Add input event listeners for real-time validation
+    Object.keys(formFields).forEach(fieldName => {
+        const field = formFields[fieldName];
+        if (field.element) {
+            field.element.addEventListener('input', () => validateField(fieldName));
+            field.element.addEventListener('blur', () => validateField(fieldName));
+        }
+    });
+
+    // Form submission
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Get form values
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const message = document.getElementById('message').value.trim();
+        // Validate all fields
+        let isFormValid = true;
+        Object.keys(formFields).forEach(fieldName => {
+            if (!validateField(fieldName)) {
+                isFormValid = false;
+            }
+        });
         
-        // Simple validation
-        let isValid = true;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        // Reset error messages
-        document.querySelectorAll('.error').forEach(el => el.remove());
-        document.querySelectorAll('.form-group').forEach(el => el.classList.remove('error'));
-        
-        // Validate name
-        if (name === '') {
-            showError('name', 'Por favor ingresa tu nombre');
-            isValid = false;
-        }
-        
-        // Validate email
-        if (email === '') {
-            showError('email', 'Por favor ingresa tu correo electrónico');
-            isValid = false;
-        } else if (!emailRegex.test(email)) {
-            showError('email', 'Por favor ingresa un correo electrónico válido');
-            isValid = false;
-        }
-        
-        // Validate message
-        if (message === '') {
-            showError('message', 'Por favor ingresa tu mensaje');
-            isValid = false;
-        }
-        
-        // If form is valid, submit it (in a real application, you would send this to a server)
-        if (isValid) {
-            // Here you would typically send the form data to a server
-            alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
-            contactForm.reset();
+        if (isFormValid) {
+            // Show loading state
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Enviando...';
+            
+            // Simulate form submission (replace with actual AJAX call)
+            setTimeout(() => {
+                // Reset form
+                contactForm.reset();
+                
+                // Show success message
+                const successMessage = document.getElementById('formSuccess');
+                successMessage.textContent = '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.';
+                successMessage.style.display = 'block';
+                
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+                
+                // Log form data (in a real app, send to server)
+                const formData = {};
+                Object.keys(formFields).forEach(fieldName => {
+                    formData[fieldName] = formFields[fieldName].element.value;
+                });
+                console.log('Form data:', formData);
+                
+            }, 1500);
         }
     });
-}
-
-// Helper function to show error messages
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const formGroup = field.closest('.form-group');
     
-    // Add error class to form group
-    formGroup.classList.add('error');
+    // Field validation function
+    function validateField(fieldName) {
+        const field = formFields[fieldName];
+        const value = field.element.value.trim();
+        let isValid = true;
+        
+        // Clear previous error
+        clearError(fieldName);
+        
+        // Skip validation for non-required empty fields
+        if (!field.required && !value) {
+            return true;
+        }
+        
+        // Check required
+        if (field.required && !value) {
+            showError(fieldName, field.errorMessages.required);
+            return false;
+        }
+        
+        // Check min length
+        if (field.minLength && value.length < field.minLength) {
+            showError(fieldName, field.errorMessages.minLength);
+            isValid = false;
+        }
+        
+        // Check max length
+        if (field.maxLength && value.length > field.maxLength) {
+            showError(fieldName, field.errorMessages.maxLength);
+            isValid = false;
+        }
+        
+        // Check pattern
+        if (field.pattern && !field.pattern.test(value)) {
+            showError(fieldName, field.errorMessages.pattern);
+            isValid = false;
+        }
+        
+        // Update field status
+        const formGroup = field.element.closest('.form-group');
+        if (isValid) {
+            formGroup.classList.remove('error');
+            formGroup.classList.add('success');
+        } else {
+            formGroup.classList.add('error');
+            formGroup.classList.remove('success');
+        }
+        
+        return isValid;
+    }
     
-    // Create error message element
-    const error = document.createElement('div');
-    error.className = 'error';
-    error.textContent = message;
-    error.style.color = '#ff4d4d';
-    error.style.fontSize = '0.8rem';
-    error.style.marginTop = '5px';
+    // Show error message
+    function showError(fieldName, message) {
+        const field = formFields[fieldName];
+        const errorElement = document.getElementById(`${fieldName}Error`);
+        
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Add error class to parent
+            const formGroup = field.element.closest('.form-group');
+            if (formGroup) {
+                formGroup.classList.add('error');
+            }
+        }
+    }
     
-    // Insert error message after the field
-    field.parentNode.insertBefore(error, field.nextSibling);
+    // Clear error message
+    function clearError(fieldName) {
+        const errorElement = document.getElementById(`${fieldName}Error`);
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.style.display = 'none';
+            
+            // Remove error class from parent
+            const formGroup = errorElement.closest('.form-group');
+            if (formGroup) {
+                formGroup.classList.remove('error');
+                formGroup.classList.remove('success');
+            }
+        }
+    }
 }
 
 // Sticky header on scroll
