@@ -23,6 +23,10 @@
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </nav>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
             <div class="menu-toggle">
                 <i class="fas fa-bars"></i>
             </div>
@@ -123,6 +127,25 @@
                     <li><i class="fas fa-check-circle"></i> Fácil digestión</li>
                     <li><i class="fas fa-check-circle"></i> Piel y pelaje saludable</li>
                 </ul>
+                <div class="product-options">
+                    <div class="size-selector">
+                        <label for="size">Tamaño:</label>
+                        <select id="size" name="size">
+                            <option value="small">Pequeño (2 kg) - $15.99</option>
+                            <option value="medium" selected>Mediano (5 kg) - $29.99</option>
+                            <option value="large">Grande (10 kg) - $49.99</option>
+                        </select>
+                    </div>
+                    <div class="quantity-selector">
+                        <label for="quantity">Cantidad:</label>
+                        <div class="quantity-controls">
+                            <button type="button" class="quantity-btn minus">-</button>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1">
+                            <button type="button" class="quantity-btn plus">+</button>
+                        </div>
+                    </div>
+                    <button class="add-to-cart cta-button">Añadir al Carrito</button>
+                </div>
             </div>
             <div class="producto-image">
                 <!-- Placeholder for product image -->
@@ -236,6 +259,73 @@
             </div>
         </div>
     </footer>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Tu Carrito</h3>
+            <button class="close-cart">&times;</button>
+        </div>
+        <div class="cart-items">
+            <!-- Cart items will be added here dynamically -->
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span class="total-amount">$0.00</span>
+        </div>
+        <button class="checkout-btn">Proceder al Pago</button>
+    </div>
+    <div class="cart-overlay"></div>
+
+    <!-- Checkout Modal -->
+    <div class="checkout-modal">
+        <div class="checkout-container">
+            <button class="close-checkout">&times;</button>
+            <h2>Información de Envío</h2>
+            <form id="shippingForm" class="shipping-form">
+                <div class="form-group">
+                    <label for="fullName">Nombre Completo *</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <div class="error-message" id="fullNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo Electrónico *</label>
+                    <input type="email" id="emailShipping" name="email" required>
+                    <div class="error-message" id="emailShippingError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Teléfono *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="address">Dirección *</label>
+                    <input type="text" id="address" name="address" required>
+                    <div class="error-message" id="addressError"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">Ciudad *</label>
+                        <input type="text" id="city" name="city" required>
+                        <div class="error-message" id="cityError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="postalCode">Código Postal *</label>
+                        <input type="text" id="postalCode" name="postalCode" required>
+                        <div class="error-message" id="postalCodeError"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notas adicionales (opcional)</label>
+                    <textarea id="notes" name="notes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="back-to-cart">Volver al Carrito</button>
+                    <button type="submit" class="place-order-btn">Realizar Pedido</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
 </body>
